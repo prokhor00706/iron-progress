@@ -1,0 +1,1696 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070707">
+<title>Железный прогресс</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #070707;
+  --gold: #e8be78;
+  --white: #f4f0e9;
+  --muted: #aaa39a;
+  --line: #51483d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--white);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.08),
+      rgba(0,0,0,.28) 230px,
+      #070707 510px
+    ),
+    url("greek-gods.png") center top / auto 510px no-repeat;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.app {
+  max-width: 660px;
+  margin: auto;
+  padding: 0 16px calc(105px + env(safe-area-inset-bottom));
+}
+
+.header {
+  min-height: 290px;
+  padding: 35px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.crest {
+  color: var(--gold);
+  font-size: 29px;
+  letter-spacing: 10px;
+  text-shadow: 0 0 20px #b38a53;
+}
+
+.brand {
+  margin-top: 12px;
+  font-size: clamp(29px,8vw,44px);
+  font-weight: 950;
+  letter-spacing: 1px;
+  line-height: 1.06;
+  text-transform: uppercase;
+  color: #f7f4ed;
+  text-shadow: 0 3px 14px #000, 0 0 22px #000;
+}
+
+.subtitle {
+  margin-top: 13px;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: #d6c9b6;
+  text-transform: uppercase;
+}
+
+.panel {
+  background: linear-gradient(
+    140deg,
+    rgba(42,37,32,.97),
+    rgba(14,14,15,.98) 65%
+  );
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 8px 25px #0009;
+}
+
+.title {
+  margin: 0 0 15px;
+  color: #f1d09b;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 13px 7px;
+  border: 0;
+  border-top: 1px solid #39342f;
+  background: transparent;
+  color: var(--white);
+  text-align: left;
+}
+
+.day.active {
+  border: 1px solid #d6ad6b;
+  border-radius: 9px;
+  background: rgba(174,121,48,.16);
+}
+
+.day.rest {
+  opacity: .52;
+}
+
+.dow {
+  min-width: 35px;
+  font-size: 19px;
+  font-weight: 950;
+  color: var(--gold);
+}
+
+.dayname {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.arrow {
+  color: var(--gold);
+  font-size: 22px;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  padding: 17px 12px;
+  border: 1px solid #f2ca90;
+  border-radius: 11px;
+  color: #181008;
+  background: linear-gradient(
+    120deg,
+    #926638,
+    #efcd91,
+    #926638
+  );
+  font-size: 14px;
+  font-weight: 950;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+}
+
+.button.secondary {
+  background: linear-gradient(120deg,#292726,#111);
+  color: #eae6de;
+  border-color: #686058;
+}
+
+.button.danger {
+  color: #f2a6a6;
+  border-color: #925252;
+}
+
+.actions {
+  display: grid;
+  gap: 11px;
+  margin: 18px 0;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 8px;
+}
+
+.stat {
+  padding: 14px 5px;
+  background: #171616;
+  border: 1px solid #52483d;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 0;
+}
+
+.stat strong {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+.stat span {
+  font-size: 10px;
+  color: #aaa49e;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.small {
+  font-size: 12px;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 23px;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.tag {
+  display: inline-block;
+  padding: 5px 9px;
+  border: 1px solid #705737;
+  border-radius: 30px;
+  color: var(--gold);
+  font-size: 11px;
+}
+
+.back {
+  padding: 9px 11px;
+  background: #24211e;
+  border: 1px solid #655744;
+  border-radius: 8px;
+  color: white;
+}
+
+.dateinput, .select {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  background: #1c1b1a;
+  border: 1px solid #675b4b;
+  border-radius: 9px;
+  color: white;
+  font-size: 14px;
+  color-scheme: dark;
+}
+
+.exercise {
+  padding: 18px 0;
+  border-bottom: 1px solid #484037;
+}
+
+.exercise:last-child {
+  border-bottom: 0;
+}
+
+.exname {
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.3;
+}
+
+.exmeta {
+  margin-top: 5px;
+  font-size: 11px;
+  color: #a9a099;
+}
+
+.previous {
+  margin-top: 9px;
+  color: #d8b780;
+  font-size: 11px;
+}
+
+.setgrid {
+  display: grid;
+  grid-template-columns: 25px 1fr 1fr 36px;
+  gap: 7px;
+  align-items: center;
+  margin-top: 9px;
+}
+
+.sethead {
+  color: #aaa49c;
+  font-size: 10px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.setno {
+  text-align: center;
+  font-weight: 800;
+  color: #b6a58e;
+}
+
+.setgrid input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 3px;
+  color: white;
+  background: #101010;
+  border: 1px solid #625647;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 16px;
+  outline-color: var(--gold);
+}
+
+.check {
+  height: 43px;
+  color: var(--gold);
+  background: #22201d;
+  border: 1px solid #746044;
+  border-radius: 8px;
+  font-size: 21px;
+}
+
+.check.done {
+  background: #604625;
+  border-color: #e8be78;
+  box-shadow: 0 0 12px #bc8d4b55;
+}
+
+.mini {
+  margin: 8px 5px 0 0;
+  padding: 9px 11px;
+  color: #e6c998;
+  background: #25211d;
+  border: 1px solid #68553d;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.historyitem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #3f3832;
+  padding: 14px 0;
+}
+
+.historyitem:last-child {
+  border-bottom: 0;
+}
+
+.historyinfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.historyinfo b {
+  display: block;
+}
+
+.empty {
+  padding: 30px 10px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.note {
+  color: #ada59a;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.chartwrap {
+  margin-top: 15px;
+  padding: 8px;
+  background: #10100f;
+  border: 1px solid #51493d;
+  border-radius: 10px;
+}
+
+.chartwrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  padding: 10px 8px calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(#211e1b,#080808);
+  border-top: 1px solid #6b5235;
+  box-shadow: 0 -5px 22px #0009;
+}
+
+nav button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: #999;
+  font-size: 12px;
+  padding: 5px;
+}
+
+nav button.active {
+  color: var(--gold);
+}
+
+nav .ico {
+  display: block;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+@media (max-width:480px) {
+  body::before {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(0,0,0,.04),
+        rgba(0,0,0,.25) 230px,
+        #070707 475px
+      ),
+      url("greek-gods.png") center top / auto 475px no-repeat;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <header class="header">
+    <div class="crest">⚔ Ω ⚔</div>
+    <div class="brand">
+      ЖЕЛЕЗНЫЙ<br>ПРОГРЕСС
+    </div>
+    <div class="subtitle">ТРЕКЕР ТРЕНИРОВОК</div>
+  </header>
+
+  <main id="app"></main>
+</div>
+
+<nav>
+  <button id="tab-plan" onclick="show('plan')">
+    <span class="ico">▦</span>
+    План
+  </button>
+  <button id="tab-workout" onclick="show('workout')">
+    <span class="ico">⚒</span>
+    Тренировка
+  </button>
+  <button id="tab-progress" onclick="show('progress')">
+    <span class="ico">▥</span>
+    Прогресс
+  </button>
+</nav>
+
+<script>
+"use strict";
+
+// ==================================================
+// ПРОГРАММА ТРЕНИРОВОК
+// ==================================================
+
+const DAYS = [
+  {
+    short: "ПН",
+    name: "Грудь / Плечи / Трицепс",
+    exercises: [
+      ["Пек дек", "Грудь"],
+      ["Жим гантелей в наклоне", "Грудь"],
+      ["Разводки гантелей", "Грудь"],
+      ["Жим в Смите узким хватом", "Грудь / Трицепс"],
+      ["Махи в стороны сидя в тренажёре", "Плечи"],
+      ["Жим в Смите из-за головы", "Плечи"],
+      ["Разгибание на трицепс верхнего блока", "Трицепс"],
+      ["Трицепс с канатом из-за головы", "Трицепс"]
+    ]
+  },
+  {
+    short: "ВТ",
+    name: "Спина (ширина) / Задняя дельта / Бицепс",
+    exercises: [
+      ["Тяга одной рукой верхнего блока", "Спина"],
+      ["Тяга штанги в наклоне", "Спина"],
+      [
+        "Тяга одной рукой — гантель",
+        "Спина",
+        "alternate",
+        "Тяга одной рукой — Хаммер"
+      ],
+      [
+        "Вертикальная тяга двумя руками в Хаммере",
+        "Спина",
+        "superset"
+      ],
+      [
+        "Пуловер с канатом",
+        "Спина",
+        "superset"
+      ],
+      ["Задняя дельта в пек деке", "Задняя дельта"],
+      ["Сгибания на бицепс лёжа на скамье", "Бицепс"],
+      ["Сгибания на бицепс в тренажёре Скотта", "Бицепс"]
+    ]
+  },
+  {
+    short: "СР",
+    name: "Ноги",
+    exercises: [
+      ["Разгибания ног сидя", "Квадрицепс"],
+      ["Присед в Гакке", "Ноги"],
+      ["Жим ногами", "Ноги"],
+      ["Сгибания на бицепс бедра лёжа", "Бицепс бедра"],
+      ["Сгибания на бицепс бедра сидя", "Бицепс бедра"],
+      ["Икры", "Икры"]
+    ]
+  },
+  {
+    short: "ЧТ",
+    name: "Отдых",
+    exercises: []
+  },
+  {
+    short: "ПТ",
+    name: "Плечи / Грудь / Трицепс",
+    exercises: [
+      [
+        "Махи в стороны с нижнего блока крест-накрест",
+        "Плечи"
+      ],
+      ["Солнышко с гантелями", "Плечи"],
+      ["Жим на плечи в тренажёре сидя", "Плечи"],
+      ["Пек дек", "Грудь"],
+      ["Жим на грудь в тренажёре лёжа", "Грудь"],
+      [
+        "Разгибание на трицепс одной рукой в верхнем блоке",
+        "Трицепс"
+      ],
+      [
+        "Разгибание гантели одной рукой из-за головы",
+        "Трицепс"
+      ]
+    ]
+  },
+  {
+    short: "СБ",
+    name: "Спина (толщина) / Задняя дельта / Бицепс",
+    exercises: [
+      ["Пуловер", "Спина"],
+      ["Горизонтальная тяга в тренажёре", "Спина"],
+      ["Горизонтальная тяга в блоке", "Спина"],
+      ["Вертикальная тяга в блоке за голову", "Спина"],
+      ["Становая тяга со стоек", "Спина"],
+      ["Задняя дельта одной рукой с гантелью", "Задняя дельта"],
+      ["Задняя дельта в Смите из-за спины", "Задняя дельта"],
+      ["Бицепс на нижнем блоке одной рукой", "Бицепс"],
+      ["Сгибание на бицепс со штангой", "Бицепс"]
+    ]
+  },
+  {
+    short: "ВС",
+    name: "Отдых",
+    exercises: []
+  }
+];
+
+// ==================================================
+// СОХРАНЕНИЕ И ПЕРЕНОС СТАРОЙ ИСТОРИИ
+// ==================================================
+
+const KEY = "iron-progress-v1";
+
+function localDate(d) {
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[ch]);
+}
+
+function dateFormat(value) {
+  if (!value) return "—";
+  return new Date(value + "T12:00:00")
+    .toLocaleDateString("ru-RU");
+}
+
+function migrateOldData(old) {
+  const sessions = (old.sessions || []).map(session => ({
+    id: String(session.id || Date.now()),
+    date: session.date,
+    day: session.day,
+    exercises: (session.exercises || []).map((ex, index) => ({
+      id: session.day + "-" + index,
+      name: ex.name,
+      type: ex.type || "",
+      sets: (ex.sets || []).map(set => ({
+        weight: set.weight,
+        reps: set.reps,
+        done: set.done !== false
+      }))
+    }))
+  }));
+
+  const drafts = {};
+
+  for (const [key, exercises] of Object.entries(old.drafts || {})) {
+    const match = key.match(/^(\d{4}-\d{2}-\d{2})_(\d)$/);
+    if (!match || !Array.isArray(exercises)) continue;
+
+    const day = Number(match[2]);
+    const date = match[1];
+
+    drafts[day + "_" + date] = {
+      date,
+      day,
+      exercises: exercises.map((ex,index) => ({
+        id: day + "-" + index,
+        name: ex.name,
+        type: ex.type || "",
+        sets: (ex.sets || []).map(set => ({
+          weight: set.weight,
+          reps: set.reps,
+          done: !!set.done
+        }))
+      }))
+    };
+  }
+
+  return {sessions,drafts};
+}
+
+function loadData() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY));
+
+    if (saved && Array.isArray(saved.sessions)) {
+      return {
+        sessions: saved.sessions,
+        drafts: saved.drafts || {}
+      };
+    }
+
+    const old = JSON.parse(
+      localStorage.getItem("iron_progress_v3")
+    );
+
+    if (old && Array.isArray(old.sessions)) {
+      const migrated = migrateOldData(old);
+      localStorage.setItem(KEY, JSON.stringify(migrated));
+      return migrated;
+    }
+  } catch(error) {
+    console.warn("Ошибка чтения истории", error);
+  }
+
+  return {sessions:[],drafts:{}};
+}
+
+let db = loadData();
+
+function save() {
+  try {
+    localStorage.setItem(KEY,JSON.stringify(db));
+  } catch(error) {
+    alert("Не удалось сохранить данные браузера.");
+  }
+}
+
+// ==================================================
+// СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+// ==================================================
+
+let selectedDay = (new Date().getDay() + 6) % 7;
+if (!DAYS[selectedDay].exercises.length) selectedDay = 0;
+
+let selectedDate = localDate(new Date());
+let selectedExercise = "";
+let currentPage = "plan";
+
+const app = document.getElementById("app");
+
+function draftKey() {
+  return selectedDay + "_" + selectedDate;
+}
+
+function alternateName(ex,date) {
+  const monday = new Date(date + "T12:00:00");
+  monday.setDate(
+    monday.getDate() - ((monday.getDay() + 6) % 7)
+  );
+
+  const first = new Date(monday.getFullYear(),0,5);
+  first.setDate(
+    first.getDate() - ((first.getDay() + 6) % 7)
+  );
+
+  const week = Math.floor((monday-first)/604800000);
+  return week % 2 === 0 ? ex[0] : ex[3];
+}
+
+function createExercises(day,date) {
+  return DAYS[day].exercises.map((ex,index) => ({
+    id: day + "-" + index,
+    name: ex[2] === "alternate"
+      ? alternateName(ex,date)
+      : ex[0],
+    type: ex[1],
+    kind: ex[2] || "",
+    sets: Array.from({length:3}, () => ({
+      weight: "",
+      reps: "",
+      done: false
+    }))
+  }));
+}
+
+function getDraft() {
+  const key = draftKey();
+
+  if (!db.drafts[key]) {
+    db.drafts[key] = {
+      date: selectedDate,
+      day: selectedDay,
+      exercises: createExercises(selectedDay,selectedDate)
+    };
+    save();
+  }
+
+  return db.drafts[key];
+}
+
+function getStats() {
+  const sets = db.sessions.flatMap(session =>
+    session.exercises.flatMap(ex => ex.sets || [])
+  );
+
+  const weights = sets
+    .filter(set => set.done !== false)
+    .map(set => Number(set.weight) || 0);
+
+  const latest = [...db.sessions].sort((a,b) =>
+    b.date.localeCompare(a.date)
+  )[0];
+
+  return {
+    count: db.sessions.length,
+    best: weights.length ? Math.max(...weights) : 0,
+    last: latest ? latest.date : null
+  };
+}
+
+function show(page) {
+  currentPage = page;
+
+  for (const name of ["plan","workout","progress"]) {
+    document.getElementById("tab-" + name)
+      .classList.toggle("active", page === name);
+  }
+
+  if (page === "plan") renderPlan();
+  if (page === "workout") renderWorkout();
+  if (page === "progress") renderProgress();
+
+  window.scrollTo(0,0);
+}
+
+function openDay(index) {
+  if (!DAYS[index].exercises.length) {
+    alert("Это день отдыха.");
+    return;
+  }
+
+  selectedDay = index;
+  show("workout");
+}
+
+// ==================================================
+// ГЛАВНЫЙ ЭКРАН
+// ==================================================
+
+function renderPlan() {
+  const stats = getStats();
+
+  app.innerHTML = `
+    <section class="panel">
+      <h2 class="title">▦ ПЛАН НА НЕДЕЛЮ</h2>
+
+      ${DAYS.map((day,index) => `
+        <button
+          class="day
+          ${index === selectedDay ? "active" : ""}
+          ${!day.exercises.length ? "rest" : ""}"
+          onclick="openDay(${index})"
+        >
+          <span class="dow">${day.short}</span>
+          <span class="dayname">${escapeHTML(day.name)}</span>
+          <span class="arrow">
+            ${day.exercises.length ? "›" : "☾"}
+          </span>
+        </button>
+      `).join("")}
+    </section>
+
+    <div class="actions">
+      <button class="button" onclick="show('workout')">
+        ⚒ ОТКРЫТЬ ТРЕНИРОВКУ
+      </button>
+
+      <button class="button secondary"
+              onclick="show('progress')">
+        ▥ ИСТОРИЯ ПРОГРЕССА
+      </button>
+    </div>
+
+    <section class="panel">
+      <h2 class="title">🏆 СТАТИСТИКА</h2>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>${stats.count}</strong>
+          <span>Тренировок</span>
+        </div>
+
+        <div class="stat">
+          <strong>
+            ${stats.best ? stats.best + " кг" : "—"}
+          </strong>
+          <span>Макс. вес</span>
+        </div>
+
+        <div class="stat">
+          <strong style="font-size:14px">
+            ${dateFormat(stats.last)}
+          </strong>
+          <span>Последняя</span>
+        </div>
+      </div>
+    </section>
+
+    <p class="note">
+      Записывай вес и повторения каждого подхода.
+      После сохранения результаты появятся в истории
+      и на графиках прогресса.
+    </p>
+  `;
+}
+
+// ==================================================
+// ЭКРАН ТРЕНИРОВКИ
+// ==================================================
+
+function previousBest(id,name) {
+  const records = [];
+
+  db.sessions.forEach(session => {
+    session.exercises.forEach(ex => {
+      if (ex.id !== id || ex.name !== name) return;
+
+      ex.sets.forEach(set => {
+        if (set.done === false) return;
+        if (set.weight === "" || set.reps === "") return;
+
+        records.push({
+          weight: Number(set.weight),
+          reps: Number(set.reps),
+          date: session.date
+        });
+      });
+    });
+  });
+
+  if (!records.length) return "";
+
+  records.sort((a,b) =>
+    b.weight - a.weight || b.reps - a.reps
+  );
+
+  const best = records[0];
+  return `Рекорд: ${best.weight} кг × ${best.reps}`;
+}
+
+function renderWorkout() {
+  const day = DAYS[selectedDay];
+
+  if (!day.exercises.length) {
+    show("plan");
+    return;
+  }
+
+  const draft = getDraft();
+
+  const done = draft.exercises.reduce(
+    (count,ex) => count + ex.sets.filter(s => s.done).length,
+    0
+  );
+
+  app.innerHTML = `
+    <div class="topline">
+      <h1 class="heading">
+        ${day.short} <span class="gold">· ТРЕНИРОВКА</span>
+      </h1>
+
+      <button class="back" onclick="show('plan')">
+        ← План
+      </button>
+    </div>
+
+    <p class="muted">${escapeHTML(day.name)}</p>
+
+    <section class="panel">
+      <div class="topline">
+        <strong>Дата тренировки</strong>
+        <span class="tag">${done} подходов ✓</span>
+      </div>
+
+      <input
+        class="dateinput"
+        type="date"
+        value="${selectedDate}"
+        onchange="changeDate(this.value)"
+      >
+    </section>
+
+    <section class="panel">
+      <h2 class="title">⚒ РАБОЧИЕ ПОДХОДЫ</h2>
+
+      ${draft.exercises.map((ex,i) => `
+        <article class="exercise">
+          <div class="topline">
+            <div style="flex:1">
+              <div class="exname">
+                ${i+1}. ${escapeHTML(ex.name)}
+              </div>
+
+              <div class="exmeta">
+                ${escapeHTML(ex.type || "")}
+                ${ex.kind === "superset"
+                  ? '<span class="gold"> · СУПЕРСЕТ ⚡</span>'
+                  : ""}
+                ${ex.kind === "alternate"
+                  ? " · Чередование по неделям"
+                  : ""}
+              </div>
+            </div>
+
+            <span class="tag">
+              ${ex.sets.filter(s => s.done).length}/${ex.sets.length}
+            </span>
+          </div>
+
+          <div class="previous">
+            ${previousBest(ex.id,ex.name)}
+          </div>
+
+          <div class="setgrid sethead">
+            <span>№</span>
+            <span>ВЕС · КГ</span>
+            <span>ПОВТОРЫ</span>
+            <span>✓</span>
+          </div>
+
+          ${ex.sets.map((set,j) => `
+            <div class="setgrid">
+              <span class="setno">${j+1}</span>
+
+              <input
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="0.5"
+                placeholder="кг"
+                value="${escapeHTML(set.weight)}"
+                oninput="editSet(${i},${j},'weight',this.value)"
+              >
+
+              <input
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="1"
+                placeholder="раз"
+                value="${escapeHTML(set.reps)}"
+                oninput="editSet(${i},${j},'reps',this.value)"
+              >
+
+              <button
+                class="check ${set.done ? "done" : ""}"
+                onclick="toggleSet(${i},${j})"
+              >
+                ${set.done ? "✓" : "○"}
+              </button>
+            </div>
+          `).join("")}
+
+          <button class="mini" onclick="addSet(${i})">
+            + Подход
+          </button>
+
+          <button class="mini" onclick="removeSet(${i})">
+            − Убрать последний
+          </button>
+        </article>
+      `).join("")}
+    </section>
+
+    <div class="actions">
+      <button class="button" onclick="saveWorkout()">
+        ✦ СОХРАНИТЬ ТРЕНИРОВКУ
+      </button>
+
+      <button class="button secondary"
+              onclick="resetWorkout()">
+        Очистить текущие записи
+      </button>
+    </div>
+
+    <p class="note">
+      Вес и повторения сохраняются автоматически.
+      После выполнения подхода нажми ✓.
+      В историю попадут только отмеченные подходы.
+    </p>
+  `;
+}
+
+function changeDate(value) {
+  if (!value) return;
+  selectedDate = value;
+  renderWorkout();
+}
+
+function editSet(i,j,field,value) {
+  const set = getDraft().exercises[i].sets[j];
+  set[field] = value.replace(",", ".");
+  save();
+}
+
+function toggleSet(i,j) {
+  const set = getDraft().exercises[i].sets[j];
+
+  if (!set.done) {
+    if (set.weight === "" || set.reps === "") {
+      alert("Сначала введи вес и повторы.");
+      return;
+    }
+
+    if (
+      !Number.isFinite(Number(set.weight)) ||
+      !Number.isFinite(Number(set.reps)) ||
+      Number(set.weight) < 0 ||
+      Number(set.reps) <= 0
+    ) {
+      alert("Проверь значения веса и повторений.");
+      return;
+    }
+  }
+
+  set.done = !set.done;
+  save();
+  renderWorkout();
+}
+
+function addSet(i) {
+  getDraft().exercises[i].sets.push({
+    weight: "",
+    reps: "",
+    done: false
+  });
+
+  save();
+  renderWorkout();
+}
+
+function removeSet(i) {
+  const sets = getDraft().exercises[i].sets;
+
+  if (sets.length <= 1) return;
+
+  if (sets[sets.length-1].done) {
+    if (!confirm("Удалить выполненный подход?")) return;
+  }
+
+  sets.pop();
+  save();
+  renderWorkout();
+}
+
+function resetWorkout() {
+  if (!confirm("Очистить текущую тренировку?")) return;
+
+  delete db.drafts[draftKey()];
+  save();
+  renderWorkout();
+}
+
+// ==================================================
+// СОХРАНЕНИЕ ЗАВЕРШЁННОЙ ТРЕНИРОВКИ
+// ==================================================
+
+function saveWorkout() {
+  const draft = getDraft();
+
+  const exercises = draft.exercises.map(ex => ({
+    id: ex.id,
+    name: ex.name,
+    type: ex.type,
+    kind: ex.kind,
+    sets: ex.sets
+      .filter(set =>
+        set.done &&
+        set.weight !== "" &&
+        set.reps !== ""
+      )
+      .map(set => ({
+        weight: Number(set.weight),
+        reps: Number(set.reps),
+        done: true
+      }))
+  })).filter(ex => ex.sets.length);
+
+  if (!exercises.length) {
+    alert("Отметь хотя бы один выполненный подход.");
+    return;
+  }
+
+  const existing = db.sessions.filter(session =>
+    session.date === selectedDate &&
+    session.day === selectedDay
+  );
+
+  if (existing.length) {
+    if (!confirm(
+      "За эту дату уже есть тренировка. Добавить ещё одну запись?"
+    )) return;
+  }
+
+  db.sessions.push({
+    id: Date.now() + "-" +
+      Math.random().toString(36).slice(2,8),
+    date: selectedDate,
+    day: selectedDay,
+    exercises
+  });
+
+  delete db.drafts[draftKey()];
+  save();
+
+  alert("Тренировка сохранена! ⚔");
+  show("progress");
+}
+
+// ==================================================
+// ДАННЫЕ ДЛЯ ГРАФИКОВ
+// ==================================================
+
+function exerciseOptions() {
+  const map = new Map();
+
+  DAYS.forEach((day,d) => {
+    day.exercises.forEach((ex,i) => {
+      const names = ex[2] === "alternate"
+        ? [ex[0],ex[3]]
+        : [ex[0]];
+
+      names.forEach(name => {
+        const id = d + "-" + i;
+        map.set(id + "|" + name,{id,name});
+      });
+    });
+  });
+
+  return [...map.values()];
+}
+
+function graphPoints(id,name) {
+  const points = [];
+
+  db.sessions.forEach(session => {
+    session.exercises.forEach(ex => {
+      if (ex.id !== id || ex.name !== name) return;
+
+      const sets = ex.sets.filter(
+        set => set.done !== false &&
+          set.weight !== "" &&
+          set.reps !== ""
+      );
+
+      if (!sets.length) return;
+
+      points.push({
+        date: session.date,
+        weight: Math.max(...sets.map(s => Number(s.weight))),
+        reps: Math.max(...sets.map(s => Number(s.reps)))
+      });
+    });
+  });
+
+  return points.sort((a,b) => a.date.localeCompare(b.date));
+}
+
+function drawGraph(points) {
+  if (!points.length) {
+    return `
+      <div class="empty">
+        Пока нет данных.<br>
+        Сохрани первую тренировку.
+      </div>
+    `;
+  }
+
+  const width = 340;
+  const height = 190;
+  const left = 38;
+  const right = 12;
+  const top = 20;
+  const bottom = 36;
+
+  const graphWidth = width-left-right;
+  const graphHeight = height-top-bottom;
+
+  const weights = points.map(p => p.weight);
+  const min = Math.max(0,Math.min(...weights)-5);
+  const max = Math.max(...weights)+5;
+  const range = max-min || 1;
+
+  const coordinates = points.map((p,i) => ({
+    ...p,
+    x: left + (points.length === 1
+      ? graphWidth/2
+      : i*graphWidth/(points.length-1)),
+    y: top+graphHeight-
+      (p.weight-min)/range*graphHeight
+  }));
+
+  const line = coordinates.map((p,i) =>
+    (i === 0 ? "M" : "L") +
+    p.x.toFixed(1) + " " +
+    p.y.toFixed(1)
+  ).join(" ");
+
+  const grid = Array.from({length:5},(_,i) => {
+    const y = top + i*graphHeight/4;
+    const value = max-i*range/4;
+
+    return `
+      <line
+        x1="${left}" y1="${y}"
+        x2="${width-right}" y2="${y}"
+        stroke="#50463a"
+        stroke-dasharray="4 5"
+      />
+      <text
+        x="2" y="${y+4}"
+        fill="#b8ae9c"
+        font-size="10"
+      >${value.toFixed(1)}</text>
+    `;
+  }).join("");
+
+  const first = coordinates[0];
+  const last = coordinates[coordinates.length-1];
+
+  return `
+    <svg viewBox="0 0 ${width} ${height}"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldArea" x1="0" y1="0"
+                        x2="0" y2="1">
+          <stop offset="0%"
+                stop-color="#e8be78"
+                stop-opacity=".4"/>
+          <stop offset="100%"
+                stop-color="#e8be78"
+                stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+
+      ${grid}
+
+      <path
+        d="${line}
+           L ${last.x} ${top+graphHeight}
+           L ${first.x} ${top+graphHeight} Z"
+        fill="url(#goldArea)"
+      />
+
+      <path
+        d="${line}"
+        fill="none"
+        stroke="#efc580"
+        stroke-width="2.5"
+      />
+
+      ${coordinates.map(p => `
+        <circle
+          cx="${p.x}" cy="${p.y}"
+          r="4"
+          fill="#ffdc9a"
+          stroke="#20170d"
+          stroke-width="2"
+        />
+      `).join("")}
+
+      <text
+        x="${left}" y="${height-8}"
+        fill="#aaa" font-size="10"
+      >${dateFormat(first.date)}</text>
+
+      <text
+        x="${width-right}" y="${height-8}"
+        text-anchor="end"
+        fill="#aaa" font-size="10"
+      >${dateFormat(last.date)}</text>
+    </svg>
+  `;
+}
+
+// ==================================================
+// ЭКРАН ПРОГРЕССА
+// ==================================================
+
+function renderProgress() {
+  const options = exerciseOptions();
+
+  if (!selectedExercise ||
+      !options.some(ex =>
+        ex.id + "|" + ex.name === selectedExercise
+      )) {
+    selectedExercise = options[0].id + "|" + options[0].name;
+  }
+
+  const separator = selectedExercise.indexOf("|");
+  const id = selectedExercise.slice(0,separator);
+  const name = selectedExercise.slice(separator+1);
+
+  const points = graphPoints(id,name);
+
+  const best = points.length
+    ? Math.max(...points.map(p => p.weight))
+    : 0;
+
+  const maxReps = points.length
+    ? Math.max(...points.map(p => p.reps))
+    : 0;
+
+  const sessions = [...db.sessions].sort((a,b) =>
+    b.date.localeCompare(a.date)
+  );
+
+  app.innerHTML = `
+    <section class="panel">
+      <h2 class="title">▥ ДИНАМИКА РАБОЧЕГО ВЕСА</h2>
+
+      <select class="select"
+              onchange="selectExercise(this.value)">
+        ${options.map(ex => {
+          const value = ex.id + "|" + ex.name;
+
+          return `
+            <option value="${escapeHTML(value)}"
+              ${value === selectedExercise ? "selected" : ""}>
+              ${escapeHTML(ex.name)}
+            </option>
+          `;
+        }).join("")}
+      </select>
+
+      <div class="stats" style="margin-top:15px">
+        <div class="stat">
+          <strong>${best ? best + " кг" : "—"}</strong>
+          <span>Лучший вес</span>
+        </div>
+
+        <div class="stat">
+          <strong>${points.length}</strong>
+          <span>Записей</span>
+        </div>
+
+        <div class="stat">
+          <strong>${maxReps || "—"}</strong>
+          <span>Макс. повторы</span>
+        </div>
+      </div>
+
+      <div class="chartwrap">
+        ${drawGraph(points)}
+      </div>
+
+      <p class="note">
+        График показывает максимальный рабочий вес
+        в выполненных подходах каждой тренировки.
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2 class="title">🏆 ИСТОРИЯ ТРЕНИРОВОК</h2>
+
+      ${sessions.length ? sessions.map(session => `
+        <div class="historyitem">
+          <div class="historyinfo">
+            <b>
+              ${dateFormat(session.date)}
+              · ${DAYS[session.day].short}
+            </b>
+
+            <div class="muted small">
+              ${escapeHTML(DAYS[session.day].name)}
+            </div>
+          </div>
+
+          <button class="mini"
+            onclick="openHistory('${session.id}')">
+            Открыть ›
+          </button>
+        </div>
+      `).join("") : `
+        <div class="empty">
+          История пока пуста.<br>
+          Сохрани первую тренировку!
+        </div>
+      `}
+    </section>
+
+    <section class="panel">
+      <h2 class="title">⤓ РЕЗЕРВНАЯ КОПИЯ</h2>
+
+      <p class="note">
+        Тренировки хранятся локально.
+        Скачивай резервную копию, чтобы не потерять
+        историю при смене устройства.
+      </p>
+
+      <div class="actions">
+        <button class="button secondary"
+                onclick="exportData()">
+          Скачать историю JSON
+        </button>
+
+        <button class="button secondary"
+                onclick="document.getElementById('importFile').click()">
+          Восстановить историю
+        </button>
+
+        <input
+          type="file"
+          id="importFile"
+          accept=".json,application/json"
+          style="display:none"
+          onchange="importData(this)"
+        >
+      </div>
+    </section>
+  `;
+}
+
+function selectExercise(value) {
+  selectedExercise = value;
+  renderProgress();
+}
+
+// ==================================================
+// ПРОСМОТР ИСТОРИИ
+// ==================================================
+
+function openHistory(id) {
+  const session = db.sessions.find(s => s.id === id);
+  if (!session) return;
+
+  app.innerHTML = `
+    <div class="topline">
+      <h1 class="heading">
+        ${dateFormat(session.date)}
+      </h1>
+
+      <button class="back" onclick="show('progress')">
+        ← История
+      </button>
+    </div>
+
+    <p class="muted">
+      ${escapeHTML(DAYS[session.day].name)}
+    </p>
+
+    <section class="panel">
+      ${session.exercises
+        .filter(ex => ex.sets.length)
+        .map(ex => `
+          <article class="exercise">
+            <div class="exname">
+              ${escapeHTML(ex.name)}
+            </div>
+
+            <div class="exmeta">
+              ${escapeHTML(ex.type || "")}
+            </div>
+
+            ${ex.sets.map((set,index) => `
+              <div class="historyitem">
+                <span class="muted">
+                  Подход ${index+1}
+                </span>
+
+                <strong>
+                  ${escapeHTML(set.weight)} кг
+                  × ${escapeHTML(set.reps)}
+                </strong>
+
+                <span class="gold">✓</span>
+              </div>
+            `).join("")}
+          </article>
+        `).join("")}
+    </section>
+
+    <div class="actions">
+      <button class="button secondary"
+              onclick="repeatWorkout('${id}')">
+        Повторить тренировку
+      </button>
+
+      <button class="button secondary danger"
+              onclick="deleteHistory('${id}')">
+        Удалить запись
+      </button>
+    </div>
+  `;
+
+  window.scrollTo(0,0);
+}
+
+function repeatWorkout(id) {
+  const session = db.sessions.find(s => s.id === id);
+  if (!session) return;
+
+  if (!confirm("Скопировать подходы в новую тренировку?")) {
+    return;
+  }
+
+  selectedDay = session.day;
+  selectedDate = localDate(new Date());
+
+  db.drafts[draftKey()] = {
+    date: selectedDate,
+    day: selectedDay,
+    exercises: session.exercises.map(ex => ({
+      ...ex,
+      sets: ex.sets.map(set => ({
+        ...set,
+        done: false
+      }))
+    }))
+  };
+
+  save();
+  show("workout");
+}
+
+function deleteHistory(id) {
+  if (!confirm("Безвозвратно удалить эту тренировку?")) {
+    return;
+  }
+
+  db.sessions = db.sessions.filter(s => s.id !== id);
+  save();
+  show("progress");
+}
+
+// ==================================================
+// ЭКСПОРТ И ИМПОРТ
+// ==================================================
+
+function exportData() {
+  const content = JSON.stringify({
+    version: 1,
+    exported: new Date().toISOString(),
+    ...db
+  },null,2);
+
+  const blob = new Blob([content],{
+    type: "application/json"
+  });
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "iron-progress-" +
+    localDate(new Date()) + ".json";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url),1500);
+}
+
+async function importData(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  try {
+    const data = JSON.parse(await file.text());
+
+    if (!Array.isArray(data.sessions)) {
+      throw new Error("Неверный формат файла.");
+    }
+
+    if (!confirm(
+      "Заменить текущую историю данными из файла?"
+    )) return;
+
+    db = {
+      sessions: data.sessions,
+      drafts: data.drafts || {}
+    };
+
+    save();
+    show("progress");
+    alert("История восстановлена!");
+
+  } catch(error) {
+    alert("Ошибка импорта: " + error.message);
+  }
+}
+
+// ==================================================
+// TELEGRAM MINI APP
+// ==================================================
+
+if (window.Telegram && window.Telegram.WebApp) {
+  try {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+    Telegram.WebApp.setHeaderColor("#080808");
+    Telegram.WebApp.setBackgroundColor("#070707");
+  } catch(error) {
+    console.warn(error);
+  }
+}
+
+// ПЕРВЫЙ ЗАПУСК
+show("plan");
+
+</script>
+</body>
+</html>
